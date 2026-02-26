@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coca-Cola Maiduguri - Enterprise Security E-Register</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>🔒 Coca-Cola Maiduguri</h1>
+                    <p>Enterprise Security E-Register</p>
+                </div>
+                <div class="header-info">
+                    <span class="date-time" id="dateTime"></span>
+                    <span class="user-info">User: Administrator</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="navbar">
+            <ul class="nav-menu">
+                <li><a href="#dashboard" class="nav-link active" onclick="showSection('dashboard')">Dashboard</a></li>
+                <li><a href="#incidents" class="nav-link" onclick="showSection('incidents')">Incidents</a></li>
+                <li><a href="#personnel" class="nav-link" onclick="showSection('personnel')">Personnel</a></li>
+                <li><a href="#patrols" class="nav-link" onclick="showSection('patrols')">Patrols</a></li>
+                <li><a href="#access" class="nav-link" onclick="showSection('access')">Access Control</a></li>
+                <li><a href="#reports" class="nav-link" onclick="showSection('reports')">Reports</a></li>
+                <li><a href="#settings" class="nav-link" onclick="showSection('settings')">Settings</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <h2>Security Dashboard</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card critical">
+                        <h3>Critical Alerts</h3>
+                        <p class="stat-number" id="criticalCount">0</p>
+                        <small>Requires immediate action</small>
+                    </div>
+                    <div class="stat-card warning">
+                        <h3>Active Incidents</h3>
+                        <p class="stat-number" id="activeCount">0</p>
+                        <small>Being investigated</small>
+                    </div>
+                    <div class="stat-card info">
+                        <h3>On Duty Personnel</h3>
+                        <p class="stat-number" id="personnelCount">0</p>
+                        <small>Currently assigned</small>
+                    </div>
+                    <div class="stat-card success">
+                        <h3>Access Points Secure</h3>
+                        <p class="stat-number" id="secureCount">0</p>
+                        <small>All monitored</small>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <h3>Recent Incidents</h3>
+                        <div class="incidents-list" id="recentIncidents">
+                            <p class="empty-state">No recent incidents</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Active Patrols</h3>
+                        <div class="patrols-list" id="activePatrols">
+                            <p class="empty-state">No active patrols</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Incidents Section -->
+            <section id="incidents" class="content-section">
+                <div class="section-header">
+                    <h2>Security Incidents</h2>
+                    <button class="btn btn-primary" onclick="openIncidentForm()">+ New Incident</button>
+                </div>
+
+                <div class="filter-bar">
+                    <input type="text" id="incidentSearch" placeholder="Search incidents..." class="input-field" onkeyup="filterIncidents()">
+                    <select id="incidentStatus" class="input-field" onchange="filterIncidents()">
+                        <option value="">All Status</option>
+                        <option value="Open">Open</option>
+                        <option value="Investigating">Investigating</option>
+                        <option value="Resolved">Resolved</option>
+                    </select>
+                </div>
+
+                <div class="incidents-table-container">
+                    <table class="data-table" id="incidentsTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Date/Time</th>
+                                <th>Type</th>
+                                <th>Location</th>
+                                <th>Severity</th>
+                                <th>Status</th>
+                                <th>Officer</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="incidentsBody">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Personnel Section -->
+            <section id="personnel" class="content-section">
+                <div class="section-header">
+                    <h2>Security Personnel</h2>
+                    <button class="btn btn-primary" onclick="openPersonnelForm()">+ Add Personnel</button>
+                </div>
+
+                <div class="personnel-grid" id="personnelGrid">
+                </div>
+            </section>
+
+            <!-- Patrols Section -->
+            <section id="patrols" class="content-section">
+                <div class="section-header">
+                    <h2>Security Patrols</h2>
+                    <button class="btn btn-primary" onclick="openPatrolForm()">+ New Patrol</button>
+                </div>
+
+                <div class="patrols-timeline" id="patrolsTimeline">
+                </div>
+            </section>
+
+            <!-- Access Control Section -->
+            <section id="access" class="content-section">
+                <div class="section-header">
+                    <h2>Access Control Monitoring</h2>
+                    <button class="btn btn-primary" onclick="openAccessForm()">+ Log Access</button>
+                </div>
+
+                <div class="access-points-grid" id="accessPointsGrid">
+                </div>
+
+                <div class="access-logs-container">
+                    <h3>Recent Access Logs</h3>
+                    <table class="data-table" id="accessLogsTable">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Access Point</th>
+                                <th>Personnel</th>
+                                <th>Card ID</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="accessLogsBody">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports" class="content-section">
+                <h2>Security Reports</h2>
+
+                <div class="report-filters">
+                    <label>Report Type:</label>
+                    <select id="reportType" class="input-field" onchange="updateReportType()">
+                        <option value="summary">Security Summary</option>
+                        <option value="incidents">Incidents Report</option>
+                        <option value="personnel">Personnel Report</option>
+                        <option value="access">Access Control Report</option>
+                    </select>
+
+                    <label>Date Range:</label>
+                    <input type="date" id="reportFromDate" class="input-field">
+                    <input type="date" id="reportToDate" class="input-field">
+                    <button class="btn btn-primary" onclick="generateReport()">Generate Report</button>
+                    <button class="btn btn-secondary" onclick="downloadReport()">Download PDF</button>
+                </div>
+
+                <div class="report-content" id="reportContent">
+                    <p class="empty-state">Select report type and generate report</p>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="content-section">
+                <h2>System Settings</h2>
+
+                <div class="settings-grid">
+                    <div class="settings-card">
+                        <h3>Security Alerts</h3>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="alertEmail" checked> Email Alerts
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="alertSMS" checked> SMS Alerts
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="alertPush" checked> Push Notifications
+                        </label>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>Data Management</h3>
+                        <button class="btn btn-secondary" onclick="exportData()">Export Data</button>
+                        <button class="btn btn-warning" onclick="clearData()">Clear Data</button>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>System Information</h3>
+                        <p>Version: 1.0.0</p>
+                        <p>Last Updated: 2026-02-26</p>
+                        <button class="btn btn-secondary" onclick="checkUpdates()">Check for Updates</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Modal for Incident Form -->
+        <div id="incidentModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeIncidentForm()">&times;</span>
+                <h2>Log Security Incident</h2>
+                <form id="incidentForm" onsubmit="submitIncident(event)">
+                    <div class="form-group">
+                        <label>Incident Type:</label>
+                        <select name="type" required>
+                            <option>Unauthorized Entry</option>
+                            <option>Suspicious Activity</option>
+                            <option>Equipment Damage</option>
+                            <option>Personnel Incident</option>
+                            <option>Access Violation</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Location:</label>
+                        <input type="text" name="location" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Date & Time:</label>
+                        <input type="datetime-local" name="datetime" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Severity:</label>
+                        <select name="severity" required>
+                            <option>Low</option>
+                            <option>Medium</option>
+                            <option>High</option>
+                            <option>Critical</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Description:</label>
+                        <textarea name="description" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Officer Name:</label>
+                        <input type="text" name="officer" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Incident</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal for Personnel Form -->
+        <div id="personnelModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closePersonnelForm()">&times;</span>
+                <h2>Add Security Personnel</h2>
+                <form id="personnelForm" onsubmit="submitPersonnel(event)">
+                    <div class="form-group">
+                        <label>Full Name:</label>
+                        <input type="text" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Badge ID:</label>
+                        <input type="text" name="badgeId" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Position:</label>
+                        <select name="position" required>
+                            <option>Security Guard</option>
+                            <option>Patrol Officer</option>
+                            <option>Supervisor</option>
+                            <option>Manager</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Shift:</label>
+                        <select name="shift" required>
+                            <option>Morning (6AM-2PM)</option>
+                            <option>Afternoon (2PM-10PM)</option>
+                            <option>Night (10PM-6AM)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone:</label>
+                        <input type="tel" name="phone" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Personnel</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal for Patrol Form -->
+        <div id="patrolModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closePatrolForm()">&times;</span>
+                <h2>Schedule Security Patrol</h2>
+                <form id="patrolForm" onsubmit="submitPatrol(event)">
+                    <div class="form-group">
+                        <label>Patrol Route:</label>
+                        <select name="route" required>
+                            <option>Main Perimeter</option>
+                            <option>North Fence</option>
+                            <option>South Fence</option>
+                            <option>East Gate</option>
+                            <option>West Gate</option>
+                            <option>Parking Area</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Assigned Officer:</label>
+                        <input type="text" name="officer" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Start Time:</label>
+                        <input type="datetime-local" name="startTime" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Duration (minutes):</label>
+                        <input type="number" name="duration" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Schedule Patrol</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal for Access Form -->
+        <div id="accessModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeAccessForm()">&times;</span>
+                <h2>Log Access</h2>
+                <form id="accessForm" onsubmit="submitAccess(event)">
+                    <div class="form-group">
+                        <label>Access Point:</label>
+                        <select name="accessPoint" required>
+                            <option>Main Gate</option>
+                            <option>Side Entrance</option>
+                            <option>Warehouse Door</option>
+                            <option>Executive Office</option>
+                            <option>Server Room</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Personnel Name:</label>
+                        <input type="text" name="personnel" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Card ID:</label>
+                        <input type="text" name="cardId" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Access Status:</label>
+                        <select name="status" required>
+                            <option>Granted</option>
+                            <option>Denied</option>
+                            <option>Pending</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Log Access</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2026 Coca-Cola Maiduguri Enterprise Security. All rights reserved.</p>
+            <p>Last synchronized: <span id="lastSync">Just now</span></p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
